@@ -13,15 +13,50 @@
     <body><br/>
         <div class="container">
             <div class="jumbotron">
-                <div class="input-group" id="input_api_group">
-                    <div class="input-class-prepend">
-                        <span class="input-group-text">
-                            Введите ваш ключ API для themoviedb.org
-                        </span>
+                <div id="tmdbDiv">
+                    <!-- Ввод API KEY --->
+                    <div id="id_api_key_input" v-if="enterApiKey == 1">
+                        <div id="api_input_group">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-class-prepend">
+                                        <label for="api_key_id" class="input-group-text">
+                                            API Key for themoviedb.org
+                                        </label>
+                                    </div>
+                                    <input id="api_key_id" type="text" placeholder="api key" class="form-control" required="true"/>
+                                    <div class="input-class-append">
+                                        <button id="api_key_ok" class="btn btn-success" @click="checkApiKey">OK</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <input id="api_key_id" type="text" placeholder="api key" class="form-control" required="true"/>
-                    <input id="api_key_ok" type="submit" class="btn btn-success" value="OK" />
+
+                    <div v-else>
+                        <div id="genres_list" v-if="genresList == 1">
+                            <center>
+                                <h4>Please Choose Movies Category</h4>
+                            </center>
+                            <div class="row">
+                                <center>
+
+                                <button class=" btn btn-secondary mx-1 my-1" @click="showByGenre"
+                                v-for="item in genres" v-bind:id="item.id">
+                                    {{ item.name }}
+                                </button>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+<!--
+                    <center>
+                        <button class="btn btn-warning" @click="switchPanels">SWITCH</button>
+                    </center>
+-->
+
                 </div>
+
             </div>
         </div>
         <script src="scripts/main.js" type="text/javascript"></script>
