@@ -1,4 +1,6 @@
-## This a simple project about using API of web-resource `https://themoviedb.org` with javascript
+### This is a simple project about using API of web-resource
+##### https://themoviedb.org
+### with javascript
 ### The most comfortable way to use this web-resource is to invole on API libraries from the list:
 ##### https://www.themoviedb.org/documentation/api/wrappers-libraries
 ### For this project was used the library
