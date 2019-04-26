@@ -10,3 +10,4 @@
 ### And open file `index.html` in any internet browser
 
 ##### because of some reasons querying for movies list on some bigger page (about over 1000) web-resource returns error 400
+###### small note about cloning the project - use command `git clone --recurse-submodules <...>.git` to get it with submodule - js-library for fast work with API, refered as submodule.
