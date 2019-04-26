@@ -13,7 +13,8 @@ $(document).ready(function () {
             currentGenreResults: "0",
             currentGenreMoviesList: [],
             currentPage: 1,
-            currentMovie: null,
+            currentMovieId: "",
+            currentMovieInfo: null,
             listLoading: 0,
         },
         mounted: function() {
@@ -59,6 +60,7 @@ $(document).ready(function () {
                 this.currentGenreMoviesList = collectionData["results"];
                 this.currentGenreMoviesList.forEach(function(item, index){
                     item["poster_url"] = "https://image.tmdb.org/t/p/w185_and_h278_bestv2" + item["poster_path"];
+                    item["movie_id"] = "movie_id_" + item["id"];
                 })
                 this.showGenres = 0;
                 this.showMoviesList = 1;
@@ -84,8 +86,56 @@ $(document).ready(function () {
                 theMovieDb.genres.getMovies({"id":this.currentGenreId, "page": this.currentPage}, this.collectionSuccess, this.collectionError)
             },
 
+            movieShow: function(dataString) {
+                movieData = JSON.parse(dataString);
+            },
+
+            movieError: function() {
+                alert("Error trying to get movie info");
+            },
+
             collectionError: function() {
                 alert('Error searching movies collection');
+            },
+
+            getMovie: function(event) {
+                this.currentMovieId = event.target.id.replace('movie_id_', '');
+                theMovieDb.movies.getById({"id":this.currentMovieId }, this.movieSuccess, this.movieError);
+            },
+
+            movieSuccess: function(dataString) {
+                this.showMoviesList = 0;
+                this.showMovieDetails = 1;
+                this.currentMovieInfo = JSON.parse(dataString);
+                this.currentMovieInfo["poster_url"] = "https://image.tmdb.org/t/p/w185_and_h278_bestv2" + this.currentMovieInfo["poster_path"];
+                theMovieDb.movies.getVideos({"id": this.currentMovieInfo.id}, this.gotVideo, this.noVideo);
+                // console.info(dataString);
+            },
+
+            movieError: function() {
+                this.showMoviesList = 1;
+                this.showMovieDetails = 0;
+                alert('error of getting more info about movie');
+            },
+
+            backToList: function() {
+                this.currentMovieId = "";
+                this.showMoviesList = 1;
+                this.showMovieDetails = 0;
+                this.currentMovieInfo = null;
+            },
+
+            gotVideo: function(dataString){
+                    videoData = JSON.parse(dataString);
+                    console.info(videoData["results"]);
+                    this.currentMovieInfo['video'] = true;
+                    this.currentMovieInfo['video_url'] = "https://www.youtube.com/embed/" + videoData["results"][0]["key"];
+                    console.info(this.currentMovieInfo['video_url']);
+            },
+
+            noVideo: function() {
+                this.currentMovieInfo['video'] = false;
+                this.currentMovieInfo['video_url'] = "";
             },
         },
     })

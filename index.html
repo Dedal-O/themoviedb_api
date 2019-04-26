@@ -79,7 +79,9 @@
                                                     <img :src=item.poster_url height="150px"/>
                                                 </td>
                                                 <td valign="middle">
+                                                    <button class="btn btn-outline-secondary btn-block" :id=item.movie_id @click="getMovie">
                                                     {{ item.title }}
+                                                    </button>
                                                 </td>
                                                 <td valign="middle">
                                                     {{ item.release_date }}
@@ -102,6 +104,60 @@
                                     <button id="last_page" class="btn btn-secondary" :disabled="currentPage == currentGenrePages" @click="lastPage"><b>&#187;</b></button>
                                     <br/><br />
                                 </center>
+                            </div>
+                            <div v-else>
+                                <div v-if="showMovieDetails == 1">
+                                    <center>
+                                        <b><h2>{{ currentMovieInfo.title }}</h2></b>
+                                        (<i>imdb_id</i> <strong>{{ currentMovieInfo.imdb_id }}</strong>)
+                                        <br />
+                                        <a :href=currentMovieInfo.homepage target="_blank"><i>homepage</i></a>
+                                        <br />
+                                        <button class="btn btn-outline-info" @click="backToList">back to list of <b>{{ currentGenreTitle }}</b> movies</button>
+                                        <br /><br />
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <td rowspan="5">
+                                                    <img :src=currentMovieInfo.poster_url />
+                                                </td>
+                                                <td colspan="2"> {{ currentMovieInfo.overview }}
+                                                </td>
+                                            </tr>
+                                            <tr><td> Release Date </td>
+                                                <td> {{ currentMovieInfo.release_date }}</td>
+                                            </tr>
+                                            <tr><td>
+                                                production companies
+                                            </td><td><span v-for="company in currentMovieInfo.production_companies" class="badge badge-pill badge-dark mx-1 my-1">{{ company.name }}</span></td>
+
+                                            </tr>
+                                            <tr><td>
+                                                languages spoken
+                                            </td><td><span v-for="language in currentMovieInfo.spoken_languages" class="badge badge-pill badge-warning mx-1 my-1">{{ language.name }}</span></td>
+
+                                            </tr>
+                                            <tr><td>
+                                                genres
+                                            </td><td> <span v-for="genre in currentMovieInfo.genres" class="badge badge-pill badge-info mx-1 my-1">{{ genre.name }}</span></td>
+                                            </tr>
+                                        </table>
+                                        <br />
+                                        <div v-if="currentMovieInfo.video == true">
+                                            <!-- <div class="alert alert-success">
+                                                <h2>Video coming soon!!!</h2>
+                                            </div> -->
+                                            <iframe height="480" width="640"
+                                                :src=currentMovieInfo.video_url>
+                                            </iframe>
+                                        </div>
+                                        <div v-else>
+                                            <div class="alert alert-danger">
+                                                <h2>No video :(</h2>
+                                            </div>
+                                        </div>
+
+                                    </center>
+                                </div>
                             </div>
                         </div>
                     </div>
