@@ -15,7 +15,7 @@
             <div class="jumbotron">
                 <div id="tmdbDiv">
                     <!-- Ввод API KEY --->
-                    <div id="id_api_key_input" v-if="enterApiKey == 1">
+                    <div id="id_api_key_input" v-if="showApiInput == 1">
                         <div id="api_input_group">
                             <div class="form-group">
                                 <div class="input-group">
@@ -34,7 +34,7 @@
                     </div>
 
                     <div v-else>
-                        <div id="genres_list" v-if="genresList == 1">
+                        <div id="genres_list" v-if="showGenres == 1">
                             <center>
                                 <h4>Please Choose Movies Category</h4>
                             </center>
@@ -42,9 +42,65 @@
                                 <center>
 
                                 <button class=" btn btn-secondary mx-1 my-1" @click="showByGenre"
-                                v-for="item in genres" v-bind:id="item.id">
+                                v-for="item in genres" :id=item.id >
                                     {{ item.name }}
                                 </button>
+                                </center>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div id="movies_list"  v-if="showMoviesList == 1">
+                                <center>
+                                    <h3>Current Genre <strong>{{ currentGenreTitle }}</strong></h3>
+                                    <button class="btn btn-outline-danger" @click="toGenresList">Back To Categories</button><br/>
+                                    <h5>Movies found: {{ currentGenreResults }}</h5>
+                                    <br/>
+                                    <!-- pagination -->
+                                    <button id="first_page" class="btn btn-secondary" :disabled="currentPage == 1" @click="firstPage"><b>&#171;</b></button>
+                                    <button id="previous_page" class="btn btn-secondary" :disabled="currentPage == 1" @click="previousPage"><b>&#8249;</b></button>
+                                    <i>current page <b>{{ currentPage }}</b></i> of {{ currentGenrePages }}
+                                    <button id="next_page" class="btn btn-secondary" :disabled="currentPage == currentGenrePages" @click="nextPage"><b>&#8250;</b></button>
+                                    <button id="last_page" class="btn btn-secondary" :disabled="currentPage == currentGenrePages" @click="lastPage"><b>&#187;</b></button>
+                                    <br/><br />
+
+                                    <table class="table table-bordered table-striped">
+                                        <thead class="table thead-dark">
+                                            <tr>
+                                                <th></th>
+                                                <th>title</th>
+                                                <th>release date</th>
+                                                <th>original language</th>
+                                                <th>popularity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="item in currentGenreMoviesList">
+                                                <td>
+                                                    <img :src=item.poster_url height="150px"/>
+                                                </td>
+                                                <td valign="middle">
+                                                    {{ item.title }}
+                                                </td>
+                                                <td valign="middle">
+                                                    {{ item.release_date }}
+                                                </td>
+                                                <td valign="middle">
+                                                    {{ item.original_language }}
+                                                </td>
+                                                <td valign="middle">
+                                                    {{ item.popularity }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <br/>
+                                    <!-- pagination -->
+                                    <button id="first_page" class="btn btn-secondary" :disabled="currentPage == 1" @click="firstPage"><b>&#171;</b></button>
+                                    <button id="previous_page" class="btn btn-secondary" :disabled="currentPage == 1" @click="previousPage"><b>&#8249;</b></button>
+                                    <i>current page <b>{{ currentPage }}</b></i> of {{ currentGenrePages }}
+                                    <button id="next_page" class="btn btn-secondary" :disabled="currentPage == currentGenrePages" @click="nextPage"><b>&#8250;</b></button>
+                                    <button id="last_page" class="btn btn-secondary" :disabled="currentPage == currentGenrePages" @click="lastPage"><b>&#187;</b></button>
+                                    <br/><br />
                                 </center>
                             </div>
                         </div>

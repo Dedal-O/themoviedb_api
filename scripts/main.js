@@ -1,16 +1,22 @@
 $(document).ready(function () {
     var tmdbApp = new Vue({
         el: "#tmdbDiv",
-        enterApiKey: true,
         data: {
-            enterApiKey: 1,
-            genresList: 0,
+            showApiInput: 1,
+            showGenres: 0,
+            showMoviesList: 0,
+            showMovieDetails: 0,
             genres: [],
-            movieList: [],
+            currentGenreId: "0",
+            currentGenreTitle: "",
+            currentGenrePages: "0",
+            currentGenreResults: "0",
+            currentGenreMoviesList: [],
+            currentPage: 1,
             currentMovie: null,
+            listLoading: 0,
         },
         mounted: function() {
-            $("#genres_list").fadeIn(1);
             // console.info("Vue App mounted");
         },
         methods: {
@@ -21,29 +27,61 @@ $(document).ready(function () {
             genresSuccess: function(received_data) {
                 parsedData = JSON.parse(received_data);
                 this.genres = parsedData['genres'];
-                $("#id_api_key_input").fadeIn(750);
-                $("#genres_list").fadeOut(500);
-                this.genresList = 1;
-                this.enterApiKey = 0;
+                this.genres.forEach(function(item, index){
+                    item["id"] = "genre_" + item["id"];
+                });
+                this.showGenres = 1;
+                this.showApiInput = 0;
             },
 
             genresError: function() {
                 alert("Entered API KEY is not valid");
-                this.genresList = 0;
-                this.enterApiKey = 1;
+                this.showGenres = 0;
+                this.showApiInput = 1;
+            },
+
+            toGenresList: function() {
+                this.showGenres = 1;
+                this.showMoviesList = 0;
+                this.currentPage = 1;
             },
 
             showByGenre: function(event) {
-                console.info(event.target.id);
-                the_genre_id = event.target.id;
-                theMovieDb.genres.getMovies({"id":the_genre_id}, this.collectionSuccess, this.collectionError)
+                this.currentGenreId = event.target.id.replace("genre_", "");
+                this.currentGenreTitle = event.target.innerText;
+                theMovieDb.genres.getMovies({"id":this.currentGenreId, "page": this.currentPage}, this.collectionSuccess, this.collectionError)
             },
 
             collectionSuccess: function(collectionString) {
                 collectionData = JSON.parse(collectionString);
-                console.info("total results", collectionData['total_results']);
-                console.info("total pages", collectionData['total_pages']);
-                console.info("all data", collectionData["results"]);
+                this.currentGenreResults = collectionData['total_results'];
+                this.currentGenrePages = collectionData['total_pages'];
+                this.currentGenreMoviesList = collectionData["results"];
+                this.currentGenreMoviesList.forEach(function(item, index){
+                    item["poster_url"] = "https://image.tmdb.org/t/p/w185_and_h278_bestv2" + item["poster_path"];
+                })
+                this.showGenres = 0;
+                this.showMoviesList = 1;
+            },
+
+            firstPage: function() {
+                this.currentPage = 1;
+                theMovieDb.genres.getMovies({"id":this.currentGenreId, "page": this.currentPage}, this.collectionSuccess, this.collectionError)
+            },
+
+            previousPage: function() {
+                this.currentPage -= 1;
+                theMovieDb.genres.getMovies({"id":this.currentGenreId, "page": this.currentPage}, this.collectionSuccess, this.collectionError)
+            },
+
+            nextPage: function() {
+                this.currentPage += 1;
+                theMovieDb.genres.getMovies({"id":this.currentGenreId, "page": this.currentPage}, this.collectionSuccess, this.collectionError)
+            },
+
+            lastPage: function() {
+                this.currentPage = this.currentGenrePages;
+                theMovieDb.genres.getMovies({"id":this.currentGenreId, "page": this.currentPage}, this.collectionSuccess, this.collectionError)
             },
 
             collectionError: function() {
