@@ -18,7 +18,7 @@ $(document).ready(function () {
             listLoading: 0,
         },
         mounted: function() {
-            // console.info("Vue App mounted");
+            console.info("Vue App mounted");
         },
         methods: {
             checkApiKey: function(){
@@ -127,10 +127,8 @@ $(document).ready(function () {
 
             gotVideo: function(dataString){
                     videoData = JSON.parse(dataString);
-                    console.info(videoData["results"]);
                     this.currentMovieInfo['video'] = true;
                     this.currentMovieInfo['video_url'] = "https://www.youtube.com/embed/" + videoData["results"][0]["key"];
-                    console.info(this.currentMovieInfo['video_url']);
             },
 
             noVideo: function() {
